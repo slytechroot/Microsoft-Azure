@@ -43,31 +43,32 @@ For example, an attacker might try just one password per hour against the same a
 How it looks in logs:<BR>
 	• Many failed sign-ins against a single username.<BR>
 	• High volume of attempts from a single IP or a small number of .<BR><BR>
-Detecting With Logs
-To filter failure attempts in Sign-in logs, you can use the query below. Note that you are also filtering out conditionalAccessStatus that are not equal to success. This is necessary because a successful authentication can have error codes in some steps of the login process.
-List all failed sign-in attempts
+Detecting With Logs<BR><BR>
+To filter failure attempts in Sign-in logs, you can use the query below. Note that you are also filtering out conditionalAccessStatus that are not equal to success. This is necessary because a successful authentication can have error codes in some steps of the login process.<BR>
+List all failed sign-in attempts<BR>
 index="task-2" sourcetype="azure:aad:signin" "status.errorCode"!=0 conditionalAccessStatus!=success
 | table _time, userPrincipalName, appDisplayName, ipAddress, location.countryOrRegion, status.errorCode, status.failureReason
-| sort - _time
+| sort - _time<BR>
 This query lists only failure attempts against Entra ID identities; however, you can leverage Splunk's (or any other SIEM's) query features to identify brute-force or password-spraying patterns better.
-For example, the query below can reveal which IP address has the most failure attempts and how many accounts were targeted:
-List failed sign-in attempts by IP address
+For example, the query below can reveal which IP address has the most failure attempts and how many accounts were targeted:<BR><BR>
+List failed sign-in attempts by IP address<BR>
 index="task-2" sourcetype="azure:aad:signin" "status.errorCode"!=0 conditionalAccessStatus!=success
 | stats dc(userPrincipalName) as targeted_accounts, count as failures by ipAddress
 | sort - failures
-After identifying an IP address executing these techniques or a relevant account being targeted, you can specifically filter for these artifacts to investigate the suspicious behavior.
-A good starting point is to check whether any authentication has been successful using the queries below by just replacing the placeholders <TARGET-USER> and <SUSPICIOUS_IP> with the user and IP address you want to investigate:
-List successful logins by user
+After identifying an IP address executing these techniques or a relevant account being targeted, you can specifically filter for these artifacts to investigate the suspicious behavior.<BR><BR>
+A good starting point is to check whether any authentication has been successful using the queries below by just replacing the placeholders <TARGET-USER> and <SUSPICIOUS_IP> with the user and IP address you want to investigate:<BR>
+List successful logins by user<BR>
 index="task-2" sourcetype="azure:aad:signin" "status.errorCode"=0
 | where userPrincipalName="<TARGET_USER>"
 | stats count by userPrincipalName, status.errorCode, ipAddress
 | sort status.errorCode
-List successful logins by IP address
+<BR><BR>
+List successful logins by IP address<BR>
 index="task-2" sourcetype="azure:aad:signin" "status.errorCode"=0
 | where ipAddress="<SUSPICIOUS_IP>"
 | stats count by userPrincipalName, status.errorCode
 | sort status.errorCode
-<img width="1433" height="1515" alt="image" src="https://github.com/user-attachments/assets/eac2d9ae-2e83-4450-9d01-0209fd356998" />
+<img width="1433" height="1515" alt="image" src="https://github.com/user-attachments/assets/eac2d9ae-2e83-4450-9d01-0209fd356998" /><BR>
 
 Conditional access policies and identity protection
 <img width="600" height="34" alt="image" src="https://github.com/user-attachments/assets/98e204e6-84a1-4450-89a9-73076307fc74" />
