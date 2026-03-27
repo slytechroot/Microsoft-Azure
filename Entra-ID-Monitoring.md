@@ -11,7 +11,7 @@ index="task-2" sourcetype="azure:aad:signin" "status.errorCode"!=0 conditionalAc
 | sort - failures
 
 
-A good starting point is to check whether any authentication has been successful using the 
+A good starting point is to check whether any authentication has been successful using the <BR>
 queries below by just replacing the placeholders <TARGET-USER> and <SUSPICIOUS_IP> with the user and IP address you want to investigate.
 List successful logins by user:<BR>
 index="task-2" sourcetype="azure:aad:signin" "status.errorCode"=0
@@ -26,23 +26,23 @@ index="task-2" sourcetype="azure:aad:signin" "status.errorCode"=0
 | sort status.errorCode
 
 
-Password based attacks:
-Stolen credentials are cheap. Credential-dumping sites and breach databases provide attackers with ready-made lists of real usernames and passwords. Many of these credentials are tied to active corporate accounts where users have reused passwords from personal services.
-Entra ID is an especially attractive target because its authentication endpoints are internet-exposed by design. Any attacker with a username list can start attempting logins without ever touching the target's network perimeter. And when a login succeeds, it can look identical to a legitimate one, with no exploit, no malware, and no network anomalies. The only way to catch it is through log analysis.
-Password Spraying
-The attacker tries a small set of common passwords against many accounts. The goal is to stay under the lockout thresholds.
-Lockout thresholds are protection policies that lock accounts after reaching a pre-defined number of failed attempts. When a user is locked, they can't access their account until an admin or a defined timeout unlocks the account.
-For example, if the policy is set to lock the account after 10 failed attempts, the attacker never exceeds 5 per account to stay stealthy. The volume is spread across accounts rather than concentrated in a single account.
-How it looks in logs:
+Password based attacks:<BR>
+Stolen credentials are cheap. Credential-dumping sites and breach databases provide attackers with ready-made lists of real usernames and passwords. Many of these credentials are tied to active corporate accounts where users have reused passwords from personal services.<BR><BR>
+Entra ID is an especially attractive target because its authentication endpoints are internet-exposed by design. Any attacker with a username list can start attempting logins without ever touching the target's network perimeter. And when a login succeeds, it can look identical to a legitimate one, with no exploit, no malware, and no network anomalies. The only way to catch it is through log analysis.<BR><BR>
+Password Spraying<BR>
+The attacker tries a small set of common passwords against many accounts. The goal is to stay under the lockout thresholds.<BR>
+Lockout thresholds are protection policies that lock accounts after reaching a pre-defined number of failed attempts. When a user is locked, they can't access their account until an admin or a defined timeout unlocks the account.<BR>
+For example, if the policy is set to lock the account after 10 failed attempts, the attacker never exceeds 5 per account to stay stealthy. The volume is spread across accounts rather than concentrated in a single account.<BR><BR>
+How it looks in logs:<BR>
 	• Many failed sign-ins from the same IP address.
 	• Failures spread across multiple different usernames.
-	• All attempts occur within a short time window.
-Brute Force
-On the other hand, in brute-force attacks, the attacker tries many passwords against a single account. This technique is less common against Entra ID due to the lockout policies. However, attackers can bypass this by throttling their attempts and spreading them over a long period, so they never exceed the lockout threshold.
-For example, an attacker might try just one password per hour against the same account. This keeps the noise low enough to avoid triggering a lockout, making it slow and harder to detect because the attempts may a longer time window.
-How it looks in logs:
-	• Many failed sign-ins against a single username.
-	• High volume of attempts from a single IP or a small number of .
+	• All attempts occur within a short time window.<BR><BR>
+Brute Force<BR>
+On the other hand, in brute-force attacks, the attacker tries many passwords against a single account. This technique is less common against Entra ID due to the lockout policies. However, attackers can bypass this by throttling their attempts and spreading them over a long period, so they never exceed the lockout threshold.<BR>
+For example, an attacker might try just one password per hour against the same account. This keeps the noise low enough to avoid triggering a lockout, making it slow and harder to detect because the attempts may a longer time window.<BR><BR>
+How it looks in logs:<BR>
+	• Many failed sign-ins against a single username.<BR>
+	• High volume of attempts from a single IP or a small number of .<BR><BR>
 Detecting With Logs
 To filter failure attempts in Sign-in logs, you can use the query below. Note that you are also filtering out conditionalAccessStatus that are not equal to success. This is necessary because a successful authentication can have error codes in some steps of the login process.
 List all failed sign-in attempts
